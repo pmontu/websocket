@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <title>Challenger</title>
+</head>
+<body ng-app="challengerApp">
+  <button id="btnCreateRoom">Create Room</button><br/>
+  <input type="text" id="roomid"/><button id="btnJoinRoom">Join Room</button><br>
+  <input type="text" id="chat"/><button id="btnChat">Send Message</button>
+  <ul id="messages"></ul>
+  <ul id="questions"></ul>
+  <button id="btnSelect">Send Questions</button>
+  <button id="btnSubmit">Submit Answers</button>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+    var socket = io();
+
+    socket.on("chat", function(msg){
+      $('#messages').append($('<li>').text(msg));
+    })
+    socket.on('message', function(msg){
+      $('#messages').append($('<li>').text(msg));
+    });
+    socket.on('create room', function(room){
+      $('#messages').append($('<li>').text(room.owner + " - " + room._id));
+    });
+    socket.on('join room', function(data){
+      $('#questions').html('')
+      $.each(data.questions, function(i,q){
+        $('#questions').append($('<li>').html('<input name="selection" type="checkbox" value="'+q._id+'">' + q.question));
+      })
+      $('#messages').append($('<li>').text(data.playerid+" joined"));
+    });
+    socket.on("close", function(stuff){
+      alert("done")
+      console.log(stuff)
+    })
+
+    var answers = []
+    socket.on('answer', function(questionids){
+      $('#questions').html('')
+      $.each(questionids, function(i,qid){
+        ans = (i%4)+1
+        $('#questions').append($('<li>').html('<input type="number" value="'+ans+'">' + qid));
+        answers.push({questionid:qid, answer:ans})
+      })
+    })
+    $("#btnCreateRoom").click(function(){
+      socket.emit("create room");
+    })
+    $("#btnJoinRoom").click(function(){
+      socket.emit("join room", $("#roomid").val());
+    })
+    $("#btnChat").click(function(){
+      socket.emit("chat", $("#chat").val());
+    })
+    $("#btnSelect").click(function(){
+      var sel = new Array();
+
+      $("#questions").find("input:checked").each(function (i, ob) { 
+        sel.push($(ob).val());
+      });
+      $('#questions').html('')
+      socket.emit("ask question",sel)
+    })
+    $("#btnSubmit").click(function(){
+      socket.emit("submit", answers)
+    })
+  </script>
+</body>
+</html>

@@ -21,14 +21,19 @@
       var host = location.origin.replace(/^http/, 'ws')
       var ws = new WebSocket(host);
       ws.onmessage = function (event) {
+        console.log(event)
         var li = document.createElement('li');
-        li.innerHTML = JSON.parse(event.data);
+        li.innerHTML = event.data;
         document.querySelector('#pings').appendChild(li);
       };
+      function send(){
+        ws.send("hello")
+      }
     </script>
   </head>
   <body>
     <h1>Pings</h1>
+    <button onclick="send()">send</button>
     <ul id='pings'></ul>
   </body>
 </html>
