@@ -54,14 +54,17 @@ console.log("server started")
 
 wss.on("connection", function(ws) {
 	ws.send("hi")
-	console.log("client connected")
+	var id = ws.upgradeReq.headers['sec-websocket-key'];
+	console.log("client connected: ",id)
 
 	ws.on("close", function() {
-		console.log("client disconnected")
+		var id = ws.upgradeReq.headers['sec-websocket-key'];
+		console.log("client disconnected ", id)
 	})
 
 	ws.on('message', function incoming(message) {
-	    console.log('received: %s', message);
+		var id = ws.upgradeReq.headers['sec-websocket-key'];
+	    console.log('received: %s', message, " id: ", id);
 	    ws.send(message)
 	});
 
