@@ -52,7 +52,7 @@ var clients = {};
 function broadcast(signal, data){
     console.log("Broadcasting")
     Object.keys(clients).forEach(function(id){
-        console.log(id, signal, data)
+        console.log(id, "[", signal, "] data:(", data, ")")
         send(clients[id], signal, data)
     })
 }
