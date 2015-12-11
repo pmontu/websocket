@@ -20,14 +20,21 @@
 </head>
 <body>
   <button id="btnCreateRoom">Create Room</button><br/>
+  <input type="text" id="roomid"/><button id="btnJoinRoom">Join Room</button><br>
   <h1>Pings</h1>
   <button id="btnPing">send</button>
   <ul id='messages'></ul>
+  <ul id="questions"></ul>
 
 
   <script>
     var host = location.origin.replace(/^http/, 'ws')
     var ws = new WebSocket(host);
+
+    function send(signal, data){
+      console.log(signal, data)
+      ws.send(JSON.stringify({signal:signal,data:data}))
+    }
 
     ws.onmessage = function (event) {
       console.log(event)
@@ -40,17 +47,26 @@
           room = message.data;
           $('#messages').append($('<li>').text(room.owner + " - " + room._id));
           break;
+        case "join room":
+          data = message.data;
+          $('#questions').html('')
+          $.each(data.questions, function(i,q){
+            $('#questions').append($('<li>').html('<input name="selection" type="checkbox" value="'+q._id+'">' + q.question));
+          })
+          $('#messages').append($('<li>').text(data.playerid+" joined"));
+          break;
       }
       
     };
 
-    $("#btnCreateRoom").click(function(){
-      message = JSON.stringify({signal:"create room"})
-      ws.send(message)
-    })
     $("#btnPing").click(function(){
-      message = JSON.stringify({signal:"message",data:"hi"})
-      ws.send(message)
+      send("message","hi")
+    })
+    $("#btnCreateRoom").click(function(){
+      send("create room")
+    })
+    $("#btnJoinRoom").click(function(){
+      send("join room",$("#roomid").val())
     })
   </script>
 </body>

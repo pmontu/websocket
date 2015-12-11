@@ -76,7 +76,7 @@ wss.on("connection", function(ws) {
 	ws.on('message', function incoming(message) {
 		var id = ws.upgradeReq.headers['sec-websocket-key'];
         message = JSON.parse(message)
-	    console.log('received: [', message.signal, "] ",message.data, " id: ", id);
+	    console.log('received: [', message.signal, "] data:(",message.data, ") id: ", id);
         if(message.signal){
             switch(message.signal){
                 case "message":
