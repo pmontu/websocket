@@ -49,12 +49,16 @@ var wss = new WebSocketServer({server: server})
 console.log("server started")
 var clients = {};
 
-function broadcast(msg){
+function broadcast(signal, data){
     console.log("Broadcasting")
     Object.keys(clients).forEach(function(id){
-        console.log(id,msg)
-        clients[id].send(msg);
+        console.log(id, signal, data)
+        send(clients[id], signal, data)
     })
+}
+
+function send(ws, signal, data){
+    ws.send(JSON.stringify({signal:signal,data:data}))
 }
 
 wss.on("connection", function(ws) {
@@ -77,12 +81,11 @@ wss.on("connection", function(ws) {
             switch(message.signal){
                 case "message":
                     console.log("message received")
-                    broadcast(JSON.stringify({signal:"message",data:message.data}))
+                    broadcast("message",message.data)
                     break;
 
                 case "create room":
                     console.log("creating room")
-
                     var room = db.get('room');
                     room.remove({owner: id, status:{$ne:0}});
                     room.find({owner: id, status:0}, {}, function (e,docs) {
@@ -94,26 +97,47 @@ wss.on("connection", function(ws) {
                                 }
                                 else {
                                     console.log("created room: "+ obj._id + " by " + obj.owner + ". status: " + doc.status + "(open)")
-                                    //socket.emit("create room", obj)
-                                    ws.send(JSON.stringify({signal:"create room",data:obj}))
-                                    //socket.broadcast.emit("message", "room created: " + obj._id)
-                                    broadcast(JSON.stringify({signal:"message",data:"room created: " + obj._id}))
+                                    send(ws, "create room", obj)
                                 }
                             })
                         } else {
-                            socket.emit("create room", docs[0])
-                            socket.broadcast.emit("message", "room created: " + docs[0]._id)
+                            send(ws, "create room", docs[0])
+                        }
+                        broadcast("message","room created: " + obj._id)
+                    })
+                    break;
+
+                case "join room":
+                    console.log("joining room")
+                    roomid = message.data
+                    var room = db.get('room');
+                    room.find({_id: roomid, status:0, owner:{$ne:id}}, {}, function(e, docs){
+                        if(docs.length != 0){
+                            // STATUS 1 for PLAYER JOINED OWNER
+                            room.update({_id:roomid},{$set:{status:1,player:id}},function(e,d){
+                                console.log("updated room status to 1(waiting): " + d)
+                            });
+                            if(docs[0].owner in clients){
+                                owner = clients[docs[0].owner]
+                            
+                                var question = db.get('question');
+                                question.find({},{},function(e,docs){
+                                    data = {playerid: id, questions:docs}
+
+                                    // SENDING QUESTION FOR BOTH PLAYERS
+                                    send(owner, "join room", data)
+                                    send(ws, "join room", data)
+                                });
+                            } else {
+                                send(ws, "message", "Owner has left the room")
+                            }
+                        } else {
+                            send(ws, "message", "Room not available")
                         }
                     })
-
                     break;
             }
         }
 	});
 
-
-    //CREATE ROOM
-    ws.on('create room', function(){
-        
-    });
 })
