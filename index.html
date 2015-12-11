@@ -1,39 +1,57 @@
 <html>
-  <head>
-    <style>
-      body {
-        font-family: "Helvetica Neue", helvetica, arial;
-        padding: 15px;
-      }
+<head>
+  <style>
+    body {
+      font-family: "Helvetica Neue", helvetica, arial;
+      padding: 15px;
+    }
 
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
 
-      ul li {
-        line-height: 1.4;
-      }
-    </style>
+    ul li {
+      line-height: 1.4;
+    }
+  </style>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<body>
+  <button id="btnCreateRoom">Create Room</button><br/>
+  <h1>Pings</h1>
+  <button id="btnPing">send</button>
+  <ul id='messages'></ul>
 
-    <script>
-      var host = location.origin.replace(/^http/, 'ws')
-      var ws = new WebSocket(host);
-      ws.onmessage = function (event) {
-        console.log(event)
-        var li = document.createElement('li');
-        li.innerHTML = event.data;
-        document.querySelector('#pings').appendChild(li);
-      };
-      function send(){
-        ws.send("hello")
+
+  <script>
+    var host = location.origin.replace(/^http/, 'ws')
+    var ws = new WebSocket(host);
+
+    ws.onmessage = function (event) {
+      console.log(event)
+      message = JSON.parse(event.data)
+      switch(message.signal){
+        case "message":
+          $('#messages').append($('<li>').text(message.data));
+          break;
+        case "create room":
+          room = message.data;
+          $('#messages').append($('<li>').text(room.owner + " - " + room._id));
+          break;
       }
-    </script>
-  </head>
-  <body>
-    <h1>Pings</h1>
-    <button onclick="send()">send</button>
-    <ul id='pings'></ul>
-  </body>
+      
+    };
+
+    $("#btnCreateRoom").click(function(){
+      message = JSON.stringify({signal:"create room"})
+      ws.send(message)
+    })
+    $("#btnPing").click(function(){
+      message = JSON.stringify({signal:"message",data:"hi"})
+      ws.send(message)
+    })
+  </script>
+</body>
 </html>
