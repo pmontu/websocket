@@ -34,8 +34,7 @@ app.get('/clients', function(req, res) {
 app.get('/rooms', function(req, res) {
     console.log("Lising Rooms")
     var room = db.get('room');
-    //,owner:{$in:Object.keys(clients)}
-    room.find({status:0},{},function(e,docs){
+    room.find({status:0,owner:{$in:Object.keys(clients)}},{},function(e,docs){
         res.send(docs)
     });
 });
