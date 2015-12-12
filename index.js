@@ -6,8 +6,8 @@ var port = process.env.PORT || 5000
 
 var mongodb = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/challenger_documents');
-//var db = monk("mongodb://heroku_flqw08hw:dmlaalfcr40mtqht9hir6tt2sq@ds027825.mongolab.com:27825/heroku_flqw08hw")
+//var db = monk('localhost:27017/challenger_documents');
+var db = monk("mongodb://heroku_flqw08hw:dmlaalfcr40mtqht9hir6tt2sq@ds027825.mongolab.com:27825/heroku_flqw08hw")
 var ObjectId = mongodb.ObjectID;
 
 
