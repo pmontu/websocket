@@ -1,0 +1,46 @@
+<div id="playerScores">
+    <div class="main-short-banner"><img src="images/collabit-logo.png" class="inner-page-mini-logo"></div>
+    <div id="playername" style="color:green;">{{player}}</div>
+
+    <!-- SUBJECT ACCORDION CODE STARTS HERE -->
+    <ul class="mainmenu">
+        <li><span>Easy<span></li>
+        <ul class="submenu">
+            <div class="expand-triangle"><img src="images/expand.png"></div>
+            <li check-data ng-repeat = "data in easy"><input class ="questions unclick" type="checkbox" data-id = "{{data.qid}}"/><span>{{data.qst}}</span></li>
+        </ul>
+        <li><span>Medium<span></li>        
+        <ul class="submenu">
+            <div class="expand-triangle"><img src="images/expand.png"></div>
+            <li check-data ng-repeat = "data in leveltwo"><input class ="questions unclick" type="checkbox" data-id = "{{data.qid}}"/><span>{{data.qst}}</span></li>
+        </ul>
+        <li><span>Difficult</span></li>
+        <ul class="submenu">
+            <div class="expand-triangle"><img src="images/expand.png"></div>
+            <li check-data ng-repeat = "data in levelthree"><input class ="questions unclick" type="checkbox" data-id = "{{data.qid}}" /><span>{{data.qst}}</span></li>
+        </ul>
+        <li class="send-test-btn"><a id="btnSendTest" style="" class="" send-data>SEND TEST</a></li>
+    </ul>
+    <div style="width: 80%; font-size:15px; line-height:22px; margin:0px auto 45px auto; padding:0px;"><span id="playermsg" style="color:green"></span></div>
+
+</div>
+
+            <script>
+            jQuery(function($) {
+                console.log("run");
+                var $submenu = $('.submenu');
+                var $mainmenu = $('.mainmenu');
+                $submenu.hide();
+                $submenu.first().delay(400).slideDown(700);
+                $submenu.on('click','li', function() {
+                    $submenu.siblings().find('li').removeClass('chosen');
+                    $(this).addClass('chosen');
+                });
+                $mainmenu.on('click', 'li', function() {
+                    $(this).next('.submenu').slideToggle().siblings('.submenu').slideUp();
+                });
+                $mainmenu.children('li:last-child').on('click', function() {
+                    $mainmenu.fadeOut().delay(500).fadeIn();
+                });
+            });
+            </script>

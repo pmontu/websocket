@@ -1,0 +1,168 @@
+<style>
+#gameArea{
+	background: none !important;
+}
+</style>
+<div class="joinReportWrapper">
+        <div class="main-short-banner"><img class="inner-page-mini-logo" src="images/collabit-logo.png" /></div>
+    <div align="center">{{msg}}</div><br>
+<div style="width: 100%; max-width: 1200px; margin:0px auto; padding:0px; display: inline-block;">
+      <div id = "containerP1" style="float:left"></div>
+<div id = "containerP2" style="float:right"></div>
+<div id="container" style="width:100%;margin: 15px auto; pading:0px;">
+	<div id="container1" style="width:48%; margin: 15px auto; padding-left: 20px; float:left; text-align:left;">
+		<table>
+        <tr>
+        <th>Level</th>
+        <th>Correct</th>
+        <th>Incorrect</th>
+        </tr>
+        <tbody>
+            <tr>
+                <td>Easy</td>
+                <td>{{easy1C}}</td>
+                <td>{{easy1CW}}</td>
+            </tr>
+        <tbody>
+            <tr>
+                <td>Medium</td>
+                <td>{{medium1C}}</td>
+                <td>{{medium1CW}}</td>
+            </tr>
+        <tbody>
+            <tr>
+                <td>Hard</td>
+                <td>{{hard1C}}</td>
+                <td>{{hard1CW}}</td>
+            </tr>
+
+        </tbody>      
+        </table>	
+		<br>
+		Preplane Points  - {{marks1}}
+	</div>
+	
+	<div id="container2" style="width:48%; margin: 15px auto; padding-left: 20px; float:left; text-align:left;">
+        <table>
+        <tr>
+        <th>Level</th>
+        <th>Correct</th>
+        <th>Incorrect</th>
+        </tr>
+        <tbody>
+            <tr>
+                <td>Easy</td>
+                <td>{{easy2C}}</td>
+                <td>{{easy2CW}}</td>
+            </tr>
+        <tbody>
+            <tr>
+                <td>Medium</td>
+                <td>{{medium2C}}</td>
+                <td>{{medium2CW}}</td>
+            </tr>
+        <tbody>
+            <tr>
+                <td>Hard</td>
+                <td>{{hard2C}}</td>
+                <td>{{hard2CW}}</td>
+            </tr>
+
+        </tbody>      
+        </table>
+		<br>
+		Hoppr Points  - {{marks2}}
+
+	</div>
+
+</div>
+</div>
+
+</div>
+<script>
+$(function () {
+    $('#containerP1').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Preplane Score Report'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [{
+                name: 'Correct',
+                y: 56.33
+            }, {
+                name: 'Wrong',
+                y: 24.03,
+                sliced: true,
+                selected: true
+            }]
+        }]
+    });
+    $('#containerP2').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Hoppr Score Report'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [{
+                name: 'Correct',
+                y: 12.33
+            }, {
+                name: 'Wrong',
+                y: 45.03,
+                sliced: true,
+                selected: true
+            }]
+        }]
+    });
+
+
+});
+
+</script>

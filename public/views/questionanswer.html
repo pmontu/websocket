@@ -1,0 +1,19 @@
+<ul id="ulAnswers">
+        <div class="main-short-banner">
+            <img src="images/collabit-logo.png" class="inner-page-mini-logo">
+        </div>
+        <div id="playername" style="color:green;">{{player}}</div>
+
+        <li class="question-bank-container" ng-repeat = "data in screenQA">
+            <div class="question-box">
+            Q{{$index+1}}. {{data.question}}
+            </div>
+
+            <div class="answer-box">
+                <div class="user-answer-txt" ng-repeat="dataChoices in data.choices"><input type="checkbox" class = "choices" data-qid="{{data._id}}" data-cid = "{{$index+1}}" name="test-ans" />{{$index+1}}. {{dataChoices}}</div>
+            </div>
+        </li>
+       <li class="finish-test"><a id="btntestComplete" style="" class="" finish-data>Submit Test</a></li>
+        <li style="margin: 20px 0px;"><span id="playermsg" style="color:green"></span></li>
+
+    </ul>

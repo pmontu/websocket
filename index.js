@@ -21,6 +21,8 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain);
 app.use(express.static(__dirname + "/"))
+app.use('/app', express.static('public'));
+app.use('/bower_components', express.static('bower_components'));
 
 var server = http.createServer(app)
 server.listen(port)

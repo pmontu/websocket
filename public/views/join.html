@@ -1,0 +1,17 @@
+<div class="joinGameWrapper">
+        <div class="main-short-banner"><img class="inner-page-mini-logo" src="images/collabit-logo.png" /></div>
+            <div class="info">
+                <label for="inputPlayerName">Your Name:</label>
+                <input id="inputPlayerName" type="text" />
+            </div>
+
+            <div class="info player-key-box">
+                <label for="inputGameId">Player Key:</label>
+                <input id="inputGameId" type="text" ng-model="roomId" />
+            </div>
+
+            <div class="info buttons player-key-box">
+                <a id="btnStart" ng-click = "joingame();" class="begin-btn-img">BEGIN</a>
+                <div id="playerWaitingMessage"></div>
+            </div>
+        </div>
