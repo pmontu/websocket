@@ -25,6 +25,8 @@
   <button id="btnPing">send</button>
   <ul id='messages'></ul>
   <ul id="questions"></ul>
+  <button id="btnAskQuestion">Send Questions</button>
+  <button id="btnSubmitAnswer">Submit Answers</button>
 
 
   <script>
@@ -35,6 +37,8 @@
       console.log(signal, data)
       ws.send(JSON.stringify({signal:signal,data:data}))
     }
+
+    var answers = []
 
     ws.onmessage = function (event) {
       console.log(event)
@@ -55,6 +59,28 @@
           })
           $('#messages').append($('<li>').text(data.playerid+" joined"));
           break;
+        case "answer":
+          questionids = message.data
+          answers = []
+          $('#questions').html('')
+          $.each(questionids, function(i,qid){
+            ans = (i%4)+1
+            $('#questions').append($('<li>').html('<input type="number" value="'+ans+'">' + qid));
+            answers.push({questionid:qid, answer:ans})
+          })
+          break;
+        case "close":
+          stuff = message.data
+          console.log(stuff)
+          $('#messages').append($('<li>').text("your score: "+stuff.mine.score+" opponent score: "+stuff.yours.score));
+          if(stuff.mine.score>stuff.yours.score){
+            alert("You Won")
+          } else if (stuff.yours.score == stuff.mine.score) {
+            alert("Game is draw")
+          } else {
+            alert("You Lost")
+          }
+          break;
       }
       
     };
@@ -67,6 +93,18 @@
     })
     $("#btnJoinRoom").click(function(){
       send("join room",$("#roomid").val())
+    })
+    $("#btnAskQuestion").click(function(){
+      var sel = new Array();
+
+      $("#questions").find("input:checked").each(function (i, ob) { 
+        sel.push($(ob).val());
+      });
+      $('#questions').html('')
+      send("ask question",sel)
+    })
+    $("#btnSubmitAnswer").click(function(){
+      send("submit", answers)
     })
   </script>
 </body>
